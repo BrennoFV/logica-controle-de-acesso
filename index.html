@@ -221,7 +221,8 @@ Conclusão: O acesso é Negado (~L).
             </div>
 
             <h3>8.2 Implementação em Python (Simulador do Autômato)</h3>
-            <p>O código abaixo simula exatamente o fluxo ramificado do diagrama acima.</p>
+            <p>O código abaixo implementa a lógica de decisão representada pelo autômato. Ele verifica o cargo e, quando necessário
+                , realiza a verificação adicional de credencial para determinar o acesso.</p>
 <pre><code>class AutomatoAcesso:
     def __init__(self):
         self.estado_atual = 'q0_inicio'
@@ -291,4 +292,5 @@ print(sis3.processar('Aluno', False))
     <!-- Script JS -->
     <script type="module" src="script.js"></script>
 </body>
+
 </html>
