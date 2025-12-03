@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trabalho de Lógica - Controle de Acesso</title>
+    
+    <!-- Link para o CSS -->
+    <link rel="stylesheet" href="style.css">
+    
+    <!-- Importando Mermaid.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.6.1/mermaid.min.js"></script>
+</head>
+<body>
+
+    <!-- Container da Animação de Fundo -->
+    <div id="darkveil-container"></div>
+
+    <div class="container">
+        
+        <!-- TÍTULO PRINCIPAL -->
+        <div class="card">
+            <h1>SISTEMA DE CONTROLE DE ACESSO</h1>
+            <p style="text-align: center; letter-spacing: 3px; color: #888;">MODELAGEM LÓGICA COMPUTACIONAL</p>
+        </div>
+
+        <!-- SUMÁRIO -->
+        <div class="card">
+            <h2>Sumário</h2>
+            <ul class="summary-list">
+                <li><a href="#topico-1">1. Descrição e Modelagem</a></li>
+                <li><a href="#topico-2">2. Lógica Proposicional</a></li>
+                <li><a href="#topico-3">3. Dedução Natural</a></li>
+                <li><a href="#topico-4">4. Resolução Proposicional</a></li>
+                <li><a href="#topico-5">5. Lógica de Predicados</a></li>
+                <li><a href="#topico-6">6. Semântica e Modelos</a></li>
+                <li><a href="#topico-7">7. Substituição e Unificação</a></li>
+                <li><a href="#topico-8">8. Parte Computacional (Autômato & Python)</a></li>
+                <li><a href="#topico-9">9. Conclusão</a></li>
+            </ul>
+        </div>
+
+        <!-- 1. Descrição -->
+        <div class="card" id="topico-1">
+            <h2>1. Descrição e Modelagem</h2>
+            <p><strong>Cenário:</strong> Laboratório de Pesquisa Universitário.</p>
+            <p>O problema consiste em controlar o acesso físico a um laboratório contendo equipamentos sensíveis. O acesso não é baseado apenas em quem a pessoa é, mas também se ela porta as credenciais corretas no momento.</p>
+            <h3>Regras de Negócio</h3>
+            <ul>
+                <li><strong>Entidades:</strong> Pessoas (Professores, Técnicos, Alunos, Visitantes) e Credenciais (Cartões de Acesso).</li>
+                <li><strong>Professor:</strong> Acesso irrestrito (inerente ao cargo).</li>
+                <li><strong>Técnico/Aluno:</strong> Acesso permitido apenas se portar autorização válida.</li>
+                <li><strong>Visitante:</strong> Acesso sempre negado.</li>
+            </ul>
+        </div>
+
+        <!-- 2. Lógica Proposicional -->
+        <div class="card" id="topico-2">
+            <h2>2. Lógica Proposicional</h2>
+            <p>Definição das proposições atômicas para validar a consistência das regras:</p>
+            <ul>
+                <li><strong>P:</strong> É Professor</li>
+                <li><strong>T:</strong> É Técnico</li>
+                <li><strong>A:</strong> É Aluno</li>
+                <li><strong>Aut:</strong> Possui Autorização Válida</li>
+                <li><strong>L:</strong> Acesso Liberado</li>
+            </ul>
+            <h3>Fórmulas Bem Formadas (FBF)</h3>
+            <div class="formula">1. P &rarr; L</div>
+            <div class="formula">2. (T &and; Aut) &rarr; L</div>
+            <div class="formula">3. (A &and; Aut) &rarr; L</div>
+            <div class="formula">4. V &rarr; &not;L</div>
+            <p>Isso garante que, se alguém for Visitante (V), o acesso é negado (&not;L), prevenindo contradições.</p>
+        </div>
+
+        <!-- 3. Dedução Natural -->
+        <div class="card" id="topico-3">
+            <h2>3. Dedução Natural</h2>
+            <p>Prova formal de que um Técnico com Autorização entra no laboratório.</p>
+            <pre>
+Premissas:
+1. T                 (É Técnico)
+2. Aut               (Tem Autorização)
+3. (T ^ Aut) -> L    (Regra do Sistema)
+
+Prova:
+4. T ^ Aut           (Introdução do E: 1, 2)
+5. L                 (Modus Ponens: 3, 4)
+
+Conclusão: O acesso é Liberado (L).
+            </pre>
+            <p>Prova formal de que Visitante é barrado:</p>
+            <pre>
+Premissas:
+1. V                 (É Visitante)
+2. V -> ~L           (Regra de Segurança)
+
+Prova:
+3. ~L                (Modus Ponens: 1, 2)
+
+Conclusão: O acesso é Negado (~L).
+            </pre>
+        </div>
+
+        <!-- 4. Resolução Proposicional -->
+        <div class="card" id="topico-4">
+            <h2>4. Resolução Proposicional</h2>
+            <p>Prova por refutação (Reductio ad Absurdum). Queremos provar que <code>(A &and; Aut) &rarr; L</code> é válido.</p>
+            <h3>Passo 1: Converter para CNF (Cláusulas)</h3>
+            <p>Regra: <code>&not;A &or; &not;Aut &or; L</code></p>
+            <p>Fatos (Hipótese): <code>{A}</code>, <code>{Aut}</code></p>
+            <p>Negação da Conclusão: <code>{&not;L}</code></p>
+            
+            <h3>Passo 2: Resolução</h3>
+            <pre>
+1. {~A, ~Aut, L}    (Regra CNF)
+2. {~L}             (Negação da Conclusão)
+-----------------------------
+3. {~A, ~Aut}       (Resolvendo 1 e 2)
+4. {A}              (Fato: É aluno)
+-----------------------------
+5. {~Aut}           (Resolvendo 3 e 4)
+6. {Aut}            (Fato: Tem autorização)
+-----------------------------
+7. {}               (CLÁUSULA VAZIA)
+            </pre>
+        </div>
+
+        <!-- 5. Lógica de Predicados -->
+        <div class="card" id="topico-5">
+            <h2>5. Lógica de Predicados</h2>
+            <p>Aqui expandimos o modelo para relacionar Pessoas (X) e Credenciais (Y).</p>
+            
+            <h3>Definições do Domínio</h3>
+            <ul>
+                <li><code>Aluno(x)</code>, <code>Prof(x)</code>: Define o cargo de x.</li>
+                <li><code>Possui(x, y)</code>: Relação onde pessoa x porta o item y.</li>
+                <li><code>Valida(y)</code>: Propriedade do item y ser válido.</li>
+                <li><code>Acessa(x)</code>: x tem permissão de entrar.</li>
+            </ul>
+
+            <h3>Regra Formal Geral</h3>
+            <p>"Um aluno X acessa se, e somente se, existe um documento Y tal que X possui Y e Y é válido."</p>
+            <div class="formula">
+                &forall;x (Aluno(x) &rarr; (&exist;y (Possui(x, y) &and; Valida(y)) &rarr; Acessa(x)))
+            </div>
+        </div>
+
+        <!-- 6. Semântica de Predicados -->
+        <div class="card" id="topico-6">
+            <h2>6. Semântica (Modelos)</h2>
+            <p>Definindo um "Mundo Possível" para teste.</p>
+            <ul>
+                <li><strong>Domínio:</strong> {joao, cracha_01}</li>
+                <li><strong>Interpretação:</strong>
+                    <ul>
+                        <li>Aluno(joao) = V</li>
+                        <li>Possui(joao, cracha_01) = V</li>
+                        <li>Valida(cracha_01) = V</li>
+                    </ul>
+                </li>
+            </ul>
+            <p><strong>Avaliação:</strong> Como <code>Possui(joao, cracha_01)</code> e <code>Valida(cracha_01)</code> são verdadeiros, o antecedente da implicação é satisfeito. Logo, <code>Acessa(joao)</code> deve ser verdadeiro para o modelo ser consistente.</p>
+        </div>
+
+        <!-- 7. Substituição e Unificação -->
+        <div class="card" id="topico-7">
+            <h2>7. Substituição e Unificação</h2>
+            <p>Processo de ligar variáveis a constantes para aplicar as regras.</p>
+            
+            <h3>Substituição</h3>
+            <p>Dada a fórmula <code>P(x)</code>, aplicamos a substituição <code>&theta; = {x / Maria}</code>.</p>
+            <p>Resultado: <code>P(Maria)</code>.</p>
+
+            <h3>Unificação</h3>
+            <p>Queremos unificar a regra geral com um fato específico:</p>
+            <ul>
+                <li>Termo 1: <code>Possui(x, y)</code> (Regra)</li>
+                <li>Termo 2: <code>Possui(Beto, Cracha_temp)</code> (Fato)</li>
+            </ul>
+            <p><strong>Unificador Mais Geral (MGU):</strong></p>
+            <div class="formula">
+                &sigma; = { x / Beto, y / Cracha_temp }
+            </div>
+        </div>
+
+        <!-- 8. Parte Computacional -->
+        <div class="card" id="topico-8">
+            <h2>8. Parte Computacional</h2>
+            
+            <h3>8.1 Autômato Finito (Tomada de Decisão)</h3>
+            <p>Este autômato demonstra a ramificação lógica. Professores acessam diretamente, enquanto Alunos e Técnicos passam por um estado intermediário de verificação de credencial.</p>
+            
+            <!-- AUTÔMATO ATUALIZADO: RAMIFICADO E COM BOLINHAS -->
+            <div class="mermaid">
+                graph LR
+                    %% Definição dos Nós (Bolinhas)
+                    q0((Início))
+                    qAuth((Verificar<br>Auth))
+                    qAceita(((Acesso<br>Liberado)))
+                    qNega(((Acesso<br>Negado)))
+
+                    %% Caminho do Professor (Direto)
+                    q0 -->|É Professor| qAceita
+
+                    %% Caminho do Visitante (Negação Direta)
+                    q0 -->|É Visitante| qNega
+
+                    %% Caminho do Aluno/Técnico (Verificação Extra)
+                    q0 -->|É Aluno/Técnico| qAuth
+                    
+                    %% Decisão da Autenticação
+                    qAuth -->|Com Crachá Válido| qAceita
+                    qAuth -->|Sem Crachá| qNega
+
+                    %% Estilização
+                    style q0 fill:#e5eaf5,stroke:#8458B3,stroke-width:2px,color:#000
+                    style qAuth fill:#e5eaf5,stroke:#8458B3,stroke-width:2px,color:#000
+                    style qAceita fill:#d0bdf4,stroke:#8458B3,stroke-width:4px,color:#000
+                    style qNega fill:#ffcccc,stroke:#cc0000,stroke-width:2px,color:#000
+            </div>
+
+            <h3>8.2 Implementação em Python (Simulador do Autômato)</h3>
+            <p>O código abaixo simula exatamente o fluxo ramificado do diagrama acima.</p>
+<pre><code>class AutomatoAcesso:
+    def __init__(self):
+        self.estado_atual = 'q0_inicio'
+
+    def processar(self, cargo, tem_autorizacao):
+        print(f"Estado: {self.estado_atual} | Entrou: {cargo}")
+        
+        # Transição saindo do Início
+        if self.estado_atual == 'q0_inicio':
+            if cargo == 'Professor':
+                self.estado_atual = 'q_aceita'
+                return "ACESSO LIBERADO (Direto)"
+            elif cargo == 'Visitante':
+                self.estado_atual = 'q_nega'
+                return "ACESSO NEGADO"
+            elif cargo in ['Aluno', 'Tecnico']:
+                self.estado_atual = 'q_auth'
+                print(" -> Redirecionando para Verificação de Auth...")
+                # Chama recursivamente para o próximo passo
+                return self.verificar_auth(tem_autorizacao)
+        
+        return "Erro de Fluxo"
+
+    def verificar_auth(self, tem_autorizacao):
+        # Lógica do estado q_auth
+        if tem_autorizacao:
+            self.estado_atual = 'q_aceita'
+            return "ACESSO LIBERADO (Credencial OK)"
+        else:
+            self.estado_atual = 'q_nega'
+            return "ACESSO NEGADO (Sem Credencial)"
+
+# --- TESTES ---
+# 1. Professor
+print("--- Teste 1: Professor ---")
+sis1 = AutomatoAcesso()
+print(sis1.processar('Professor', False))
+
+# 2. Aluno com Auth
+print("\n--- Teste 2: Aluno com Auth ---")
+sis2 = AutomatoAcesso()
+print(sis2.processar('Aluno', True))
+
+# 3. Aluno sem Auth
+print("\n--- Teste 3: Aluno sem Auth ---")
+sis3 = AutomatoAcesso()
+print(sis3.processar('Aluno', False))
+</code></pre>
+        </div>
+
+        <!-- 9. Conclusão -->
+        <div class="card" id="topico-9">
+            <h2>9. Conclusão</h2>
+            <p>O desenvolvimento deste trabalho demonstrou que a aplicação da lógica formal é indispensável para sistemas de segurança robustos.</p>
+            <ul>
+                <li>A <strong>Lógica Proposicional</strong> permitiu criar tabelas de decisão livres de contradições.</li>
+                <li>A <strong>Lógica de Predicados</strong> foi essencial para modelar a relação de posse (<code>Possui(x, y)</code>).</li>
+                <li>O <strong>Autômato Finito</strong> ilustrou visualmente que diferentes cargos exigem diferentes caminhos de validação.</li>
+            </ul>
+        </div>
+
+        <footer>
+            <p>Trabalho Acadêmico - Lógica para Computação</p>
+        </footer>
+    </div>
+
+    <!-- Script JS -->
+    <script type="module" src="script.js"></script>
+</body>
+</html>
